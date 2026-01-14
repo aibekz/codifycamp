@@ -3,7 +3,16 @@
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem("darkMode");
+    if (saved !== null) {
+      setDarkMode(saved === "true");
+    }
+  }, []);
 
   useEffect(() => {
     if (darkMode) {
@@ -11,7 +20,10 @@ export default function Home() {
     } else {
       document.documentElement.classList.remove("dark");
     }
-  }, [darkMode]);
+    if (mounted) {
+      localStorage.setItem("darkMode", String(darkMode));
+    }
+  }, [darkMode, mounted]);
 
   return (
     <div className="h-screen bg-white dark:bg-neutral-950 flex flex-col">
